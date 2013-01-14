@@ -1,16 +1,16 @@
 { 
-	"awsdecomm":{
-	    "chef_server_host": "127.0.0.1",
-	    "chef_server_port": "4000",
-	    "chef_server_version": "0.10.16.2",
-	    "chef_client_user": "sensu",
-	    "chef_client_key_dir": "/etc/sensu/conf.d/handlers/sensu.pem",
-	    "access_key_id": "ACCESS_KEY_ID",
-	    "secret_access_key": "SECRET_ACCESS_KEY",
-	    "mail_from": "sensu@example.com",
-	    "mail_to": "nobody@example.com",
-	    "smtp_address": "localhost",
-	    "smtp_port": "25",
-	    "smtp_domain": "localhost"
-	  }
+  "awsdecomm":{
+      "chef_server_host": "127.0.0.1",
+      "chef_server_port": "4000",
+      "chef_server_version": "0.10.16.2",
+      "chef_client_user": "sensu",
+      "chef_client_key_dir": "/etc/sensu/conf.d/handlers/sensu.pem",
+      "access_key_id": "ACCESS_KEY_ID",
+      "secret_access_key": "SECRET_ACCESS_KEY",
+      "mail_from": "sensu@example.com",
+      "mail_to": "nobody@example.com",
+      "smtp_address": "localhost",
+      "smtp_port": "25",
+      "smtp_domain": "localhost"
+    }
 }

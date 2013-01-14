@@ -16,8 +16,9 @@ Usage and Configuration
 This handler uses the sensu-plugin.
   > gem install sensu-plugin
 
+You will need to attach this to the default handler in sensu.  Sensu sends client keepalive failures to the default handler.  If a client keepalive gets sent to this handler it will proceed to check if it should be removed from sensu and chef.  This handler never terminates servers in AWS itself.  It simply takes action on nodes that do not exist or are in a terminated or shutting-down state.
 
-awsdecomm relies on a bunch of configuration files set in awsdecomm.json.  You will need to provide AWS credentials, Chef Server information and client key as well as smtp server information.
+awsdecomm relies on a bunch of configuration files set in awsdecomm.json.  You will need to provide AWS credentials, Chef Server information, Chef client key and smtp server information.
 ````
 { 
   "awsdecomm":{
@@ -51,6 +52,7 @@ License and Author
 ==================
 
 Author:: Bryan Brandau <agent462@gmail.com>
+
 Copyright:: 2013, Bryan Brandau
 
 Licensed under the Apache License, Version 2.0 (the "License");

@@ -95,7 +95,7 @@ class AwsDecomm < Sensu::Handler
         if i.exists?
           puts "Instance #{@event['client']['name']} exists; Checking state"
           instance = true
-          if i.status.to_s === "terminated" || i.status.to_s === "shutting_down" || i.status.to_s === "stopped"
+          if i.status.to_s === "terminated" || i.status.to_s === "shutting_down"
             puts "Instance #{@event['client']['name']} is #{i.status}; I will proceed with decommission activities."
             delete_sensu_client
             delete_chef_node
