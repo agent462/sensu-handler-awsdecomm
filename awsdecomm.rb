@@ -30,7 +30,7 @@ class AwsDecomm < Sensu::Handler
       puts "Sensu client #{@event['client']['name']} is being deleted."
       retries = 1
       begin
-        if api_request(:DELETE, '/clients/' + @event['client']['name']).code != '200' then raise "Sensu API call failed;" end
+        if api_request(:DELETE, '/clients/' + @event['client']['name']).code != '202' then raise "Sensu API call failed;" end
       rescue StandardError => e
         if (retries -= 1) >= 0
           sleep 3
@@ -110,8 +110,8 @@ class AwsDecomm < Sensu::Handler
           retry
         else
           @b << "AWS instance lookup failed permanently for #{@event['client']['name']}."
-          mail(s)
-          bail(s)
+          mail(@b)
+          bail(@b)
         end 
       end
     end
