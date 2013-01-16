@@ -110,7 +110,7 @@ class AwsDecomm < Sensu::Handler
           retry
         else
           @b << "AWS instance lookup failed permanently for #{@event['client']['name']}."
-          mail(@b)
+          mail
           bail(@b)
         end 
       end
