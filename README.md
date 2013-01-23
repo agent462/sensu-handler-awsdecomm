@@ -9,7 +9,7 @@ Features
 * Decomission of node from Sensu
 * Decomission of node and client from Chef Server
 * Email on failure or success of decommission
-
+* Handles normal resolve/create keepalive events when decomm is not needed
 
 Usage and Configuration
 -----------------------
@@ -17,10 +17,39 @@ This handler uses the sensu-plugin.
   > gem install sensu-plugin
 
 You will need to attach this to the default handler in sensu.  Sensu sends client keepalive failures to the default handler.  If a client keepalive gets sent to this handler it will proceed to check if it should be removed from sensu and chef.  This handler never terminates servers in AWS itself.  It simply takes action on nodes that do not exist or are in a terminated or shutting-down state.
+`/etc/sensu/conf.d/handlers/default.json`
+````
+{
+  "handlers": {
+    "default": {
+      "type": "set",
+      "handlers": [
+        "awsdecommission"
+      ]
+    }
+  }
+}
+````
 
-Right now this handler only checks us-east-1 and us-west-2.  This will end up configurable.  You can manually change this in the meantime.  
+`/etc/sensu/conf.d/handlers/awsdecommission.json`
+````
+{
+  "handlers": {
+    "awsdecommission": {
+      "type": "pipe",
+      "command": "/etc/sensu/handlers/awsdecomm.rb",
+      "severities": [
+        "ok",
+        "warning",
+        "critical"
+      ]
+    }
+  }
+}
+````
 
 awsdecomm relies on a bunch of configuration files set in awsdecomm.json.  You will need to provide AWS credentials, Chef Server information, Chef client key and smtp server information.
+`/etc/sensu/conf.d/handlers/awsdecomm.json`
 ````
 { 
   "awsdecomm":{
@@ -42,8 +71,10 @@ awsdecomm relies on a bunch of configuration files set in awsdecomm.json.  You w
 
 Notables
 --------
-This plugin attempts to catch failures and will alert you so that manual intervention can be taken.
-I've tried to incorporate a mildly verbose logging to the sensu-server.log on each step.
+* This plugin attempts to catch failures and will alert you so that manual intervention can be taken.
+* I've tried to incorporate a mildly verbose logging to the sensu-server.log on each step. 
+* Right now this handler only checks us-east-1 and us-west-2.  This will end up configurable.  You can manually change this in the meantime.  
+
 
 Contributions
 -------------
