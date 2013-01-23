@@ -16,7 +16,7 @@ Usage and Configuration
 This handler uses the sensu-plugin.
   > gem install sensu-plugin
 
-You will need to attach this to the default handler in sensu.  Sensu sends client keepalive failures to the default handler.  If a client keepalive gets sent to this handler it will proceed to check if it should be removed from sensu and chef.  This handler never terminates servers in AWS itself.  It simply takes action on nodes that do not exist or are in a terminated or shutting-down state.
+You will need to attach this to the default handler in sensu.  Sensu sends client keepalive failures to the default handler.  If a client keepalive gets sent to this handler it will proceed to check if it should be removed from sensu and chef.
 `/etc/sensu/conf.d/handlers/default.json`
 ````
 {
@@ -74,7 +74,7 @@ Notables
 * This plugin attempts to catch failures and will alert you so that manual intervention can be taken.
 * I've tried to incorporate a mildly verbose logging to the sensu-server.log on each step. 
 * Right now this handler only checks us-east-1 and us-west-2.  This will end up configurable.  You can manually change this in the meantime.  
-
+* This handler never terminates servers in AWS itself.  It simply takes action on nodes that do not exist or are in a terminated or shutting-down state.
 
 Contributions
 -------------
