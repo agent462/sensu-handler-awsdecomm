@@ -49,6 +49,7 @@ You will need to attach this to the default handler in sensu.  Sensu sends clien
 ````
 
 awsdecomm relies on a bunch of configuration files set in awsdecomm.json.  You will need to provide AWS credentials, Chef Server information, Chef client key and smtp server information.
+
 `/etc/sensu/conf.d/handlers/awsdecomm.json`
 ````
 { 
