@@ -34,7 +34,7 @@ class AwsDecomm < Sensu::Handler
       rescue StandardError => e
         if (retries -= 1) >= 0
           sleep 3
-          puts e.message + " Deletion failed; retrying to delete sensu client #{@event['client']['name']}"
+          puts e.message + " Deletion failed; retrying to delete sensu client #{@event['client']['name']}."
           retry
         else
           puts @b << e.message + " Deleting sensu client #{@event['client']['name']} failed permanently."
@@ -44,10 +44,10 @@ class AwsDecomm < Sensu::Handler
 
     def delete_chef_node
       Spice.setup do |s|
-        s.server_url   = "http://#{@settings["awsdecomm"]["chef_server_host"]}:#{@settings["awsdecomm"]["chef_server_port"]}"
-        s.client_name  = @settings["awsdecomm"]["chef_client_user"]
-        s.client_key   = Spice.read_key_file( @settings["awsdecomm"]["chef_client_key_dir"] )
-        s.chef_version = @settings["awsdecomm"]["chef_server_version"]
+        s.server_url   = "http://#{settings["awsdecomm"]["chef_server_host"]}:#{settings["awsdecomm"]["chef_server_port"]}"
+        s.client_name  = settings["awsdecomm"]["chef_client_user"]
+        s.client_key   = Spice.read_key_file( settings["awsdecomm"]["chef_client_key_dir"] )
+        s.chef_version = settings["awsdecomm"]["chef_server_version"]
       end
 
       JSON.create_id = nil #this is needed because the json response has a json_class key
@@ -84,8 +84,8 @@ class AwsDecomm < Sensu::Handler
     instance = false
     %w{ ec2.us-east-1.amazonaws.com ec2.us-west-2.amazonaws.com }.each do |region|
       ec2 = AWS::EC2.new(
-        :access_key_id => @settings["awsdecomm"]["access_key_id"],
-        :secret_access_key => @settings["awsdecomm"]["secret_access_key"],
+        :access_key_id => settings["awsdecomm"]["access_key_id"],
+        :secret_access_key => settings["awsdecomm"]["secret_access_key"],
         :ec2_endpoint => region
       )
 
@@ -116,6 +116,7 @@ class AwsDecomm < Sensu::Handler
       end
     end
     if instance == false
+      @b << "AWS instance was not found #{@event['client']['name']}."
       delete_sensu_client
       delete_chef_node
     end
@@ -123,11 +124,11 @@ class AwsDecomm < Sensu::Handler
   
   def mail
     params = {
-      :mail_to   => @settings['awsdecomm']['mail_to'],
-      :mail_from => @settings['awsdecomm']['mail_from'],
-      :smtp_addr => @settings['awsdecomm']['smtp_address'],
-      :smtp_port => @settings['awsdecomm']['smtp_port'],
-      :smtp_domain => @settings['awsdecomm']['smtp_domain']
+      :mail_to   => settings['awsdecomm']['mail_to'],
+      :mail_from => settings['awsdecomm']['mail_from'],
+      :smtp_addr => settings['awsdecomm']['smtp_address'],
+      :smtp_port => settings['awsdecomm']['smtp_port'],
+      :smtp_domain => settings['awsdecomm']['smtp_domain']
     }
 
     body = <<-BODY.gsub(/^ {14}/, '')
