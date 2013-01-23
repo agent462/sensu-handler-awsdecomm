@@ -101,6 +101,9 @@ class AwsDecomm < Sensu::Handler
             delete_chef_node
           else
             puts "Client #{@event['client']['name']} is #{i.status}"
+            @s = "alert"
+            mail
+            bail
           end
         end
       rescue AWS::Errors::ClientError, AWS::Errors::ServerError => e
@@ -110,6 +113,7 @@ class AwsDecomm < Sensu::Handler
           retry
         else
           @b << "AWS instance lookup failed permanently for #{@event['client']['name']}."
+          @s = "failed"
           mail
           bail(@b)
         end 
@@ -141,10 +145,19 @@ class AwsDecomm < Sensu::Handler
             Status:  #{@event['check']['status']}
             Occurrences:  #{@event['occurrences']}
           BODY
-    s_subject = "Decommission of #{@event['client']['name']} was successful."
-    f_subject = "Failure: Decommission of #{@event['client']['name']} failed."
 
-    @b != "" ? begin body = @b; sub = f_subject end : sub = s_subject
+    case @s
+      when "success"
+        sub = "Decommission of #{@event['client']['name']} was successful."
+      when "alert"
+        sub = "ALERT - #{@event['client']['name']}/#{@event['check']['name']}: #{@event['check']['notification']}"
+      when "resolve"
+        sub = "RESOLVED - #{@event['client']['name']}/#{@event['check']['name']}: #{@event['check']['notification']}" 
+      else
+        sub = "FAILURE: Decommission of #{@event['client']['name']} failed."  
+    end
+
+    if @b != "" then body = @b end
 
     Mail.defaults do
       delivery_method :smtp, {
@@ -173,8 +186,13 @@ class AwsDecomm < Sensu::Handler
 
   def handle
     @b = ""
+    @s = ""
     if @event['action'].eql?('create')
       check_ec2
+      @s = "success"
+      mail
+    elsif @event['action'].eql?('resolve')
+      @s = "resolve"
       mail
     end
   end
