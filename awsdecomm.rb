@@ -55,7 +55,7 @@ class AwsDecomm < Sensu::Handler
       begin
         puts "Chef node #{@event['client']['name']} is being deleted"
         Spice.delete( "/nodes/#{@event['client']['name']}" )
-      rescue Spice::Error => e
+      rescue StandardError, Spice::Error => e
         if (retries -= 1) >= 0
           sleep 3
           puts e.message + " Deletion failed; retrying to delete chef node #{@event['client']['name']}"
@@ -69,7 +69,7 @@ class AwsDecomm < Sensu::Handler
       begin
         puts "Chef client #{@event['client']['name']} is being deleted"
         Spice.delete( "/clients/#{@event['client']['name']}" )
-      rescue Spice::Error => e
+      rescue StandardError, Spice::Error => e
         if (retries -= 1) >= 0
           sleep 3
           puts e.message + " Deletion failed, retrying to delete chef client #{@event['client']['name']}"
