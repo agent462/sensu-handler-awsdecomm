@@ -38,6 +38,7 @@ class AwsDecomm < Sensu::Handler
           retry
         else
           puts @b << e.message + " Deleting sensu client #{@event['client']['name']} failed permanently."
+          @s = "failed"
         end 
       end
     end
@@ -62,6 +63,7 @@ class AwsDecomm < Sensu::Handler
           retry
         else
           puts @b << e.message + " Deleting chef node #{@event['client']['name']} failed permanently."
+          @s = "failed"
         end 
       end
 
@@ -76,6 +78,7 @@ class AwsDecomm < Sensu::Handler
           retry
         else
           puts @b << e.message + " Deleting chef client #{@event['client']['name']} failed permanently."
+          @s = "failed"
         end 
       end
     end
@@ -189,7 +192,7 @@ class AwsDecomm < Sensu::Handler
     @s = ""
     if @event['action'].eql?('create')
       check_ec2
-      @s = "success"
+      if @s == nil then @s = "success" end
       mail
     elsif @event['action'].eql?('resolve')
       @s = "resolve"
