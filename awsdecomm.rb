@@ -192,7 +192,7 @@ class AwsDecomm < Sensu::Handler
     @s = ""
     if @event['action'].eql?('create')
       check_ec2
-      if @s == nil then @s = "success" end
+      if @s === "" then @s = "success" end
       mail
     elsif @event['action'].eql?('resolve')
       @s = "resolve"
