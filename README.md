@@ -3,6 +3,8 @@ awsdecomm
 
 A sensu handler for decomission of AWS nodes in sensu and chef-server.
 
+A walkthrough to create your own http://www.ragedsyscoder.com/blog/2014/01/14/sensu-automated-decommission-of-clients/
+
 Features
 --------
 * Checks state of node in AWS
