@@ -188,6 +188,8 @@ class AwsDecomm < Sensu::Handler
   end
 
   def handle
+    return unless @event['check']['name'] == 'keepalive'
+      
     @b = ""
     @s = ""
     if @event['action'].eql?('create')
